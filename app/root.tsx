@@ -9,8 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import {usePuterStore} from "~/lib/puter";
-import {use, useEffect} from "react";
+import { useAuthStore } from "~/lib/auth";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -26,11 +26,15 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { init } = usePuterStore();
+  const { initialize, isInitialized } = useAuthStore();
 
   useEffect(() => {
-    init()
-  }, [init]);
+    // Only initialize if not already initialized and we're on client side
+    if (typeof window !== 'undefined' && !isInitialized) {
+      initialize();
+    }
+  }, [initialize, isInitialized]);
+  
   return (
     <html lang="en">
       <head>
@@ -40,11 +44,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-      <script src="https://js.puter.com/v2/"></script>
-
-      {children}
-      <ScrollRestoration/>
-      <Scripts/>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
   );

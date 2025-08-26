@@ -15,7 +15,7 @@ async function loadPdfJs(): Promise<any> {
     isLoading = true;
     // @ts-expect-error - pdfjs-dist/build/pdf.mjs is not a module
     loadPromise = import("pdfjs-dist/build/pdf.mjs").then((lib) => {
-        // Set the worker source to use local file
+        // Set the worker source to use local file (now updated to match version)
         lib.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
         pdfjsLib = lib;
         isLoading = false;
@@ -52,6 +52,9 @@ export async function convertPdfToImage(
         return new Promise((resolve) => {
             canvas.toBlob(
                 (blob) => {
+                    // Clean up canvas immediately after use
+                    canvas.remove();
+                    
                     if (blob) {
                         // Create a File from the blob with the same name as the pdf
                         const originalName = file.name.replace(/\.pdf$/i, "");
@@ -76,10 +79,11 @@ export async function convertPdfToImage(
             ); // Set quality to maximum (1.0)
         });
     } catch (err) {
+        console.error("PDF conversion error:", err);
         return {
             imageUrl: "",
             file: null,
-            error: `Failed to convert PDF: ${err}`,
+            error: `Failed to convert PDF: ${err instanceof Error ? err.message : String(err)}`,
         };
     }
 }

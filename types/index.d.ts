@@ -5,6 +5,7 @@ interface Job {
     requiredSkills: string[];
 }
 
+// Main app types - use these throughout the application
 interface Resume {
     id: string;
     companyName?: string;

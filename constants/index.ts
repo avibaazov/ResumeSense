@@ -183,7 +183,7 @@ export const resumes: Resume[] = [
 
 export const AIResponseFormat = `
       interface Feedback {
-      overallScore: number; //max 100
+      overallScore: number; //calculate as average of 4 section scores: (toneAndStyle + content + structure + skills) / 4. Do NOT include ATS. Round to nearest integer.
       ATS: {
         score: number; //rate based on ATS suitability
         tips: {
@@ -226,16 +226,23 @@ export const AIResponseFormat = `
     }`;
 
 export const prepareInstructions = ({jobTitle, jobDescription}: { jobTitle: string; jobDescription: string; }) =>
-    `You are an expert in ATS (Applicant Tracking System) and resume analysis.
-      Please analyze and rate this resume and suggest how to improve it.
-      The rating can be low if the resume is bad.
-      Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
-      If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
-      If available, use the job description for the job user is applying to to give more detailed feedback.
-      If provided, take the job description into consideration.
+    `You are an expert resume analyst. Please analyze and rate this resume based on 5 areas, but calculate overall score from only 4.
+      Score each section from 0-100. Calculate overallScore as the average of 4 sections (excluding ATS) and round to nearest integer.
+      Be thorough and detailed. Don't be afraid to point out mistakes or give low scores.
+      
       The job title is: ${jobTitle}
       The job description is: ${jobDescription}
+      
+      Analyze these 5 areas:
+      1. ATS - How well the resume passes Applicant Tracking Systems
+      2. toneAndStyle - Professional language, appropriate tone
+      3. content - Relevant experience, achievements, impact
+      4. structure - Layout, organization, formatting
+      5. skills - Technical and soft skills relevance
+      
+      IMPORTANT: overallScore must be the mathematical average of 4 section scores: (toneAndStyle + content + structure + skills) / 4. Do NOT include ATS in the overall score calculation. Round to the nearest integer.
+      
       Provide the feedback using the following format:
       ${AIResponseFormat}
-      Return the analysis as an JSON object, without any other text and without the backticks.
+      Return the analysis as a JSON object, without any other text and without backticks.
       Do not include any other text or comments.`;
