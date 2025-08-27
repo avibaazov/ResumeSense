@@ -2,6 +2,7 @@
 <a href="https://resume-sense.vercel.app/" target="_blank">
 <img width="1875" height="485" alt="image" src="https://github.com/user-attachments/assets/0fd8053f-7cd4-4d61-93fb-db8485b37667" />
 </a>
+
 **AI-Powered Resume Analysis & Optimization Platform**
 
 ResumeSense is a modern web application that helps job seekers optimize their resumes using advanced AI analysis. Upload your resume, get detailed feedback, and improve your chances of landing your dream job.
